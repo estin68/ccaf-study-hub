@@ -175,6 +175,28 @@
       <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/vision" target="_blank" rel="noopener">Vision / multimodal</a> and <a href="https://docs.anthropic.com/en/docs/build-with-claude/context" target="_blank" rel="noopener">Context engineering</a>.</li>
     </ul>
   </section>
+
+<section>
+    <h2>🗺️ Coverage Checklist — track your exam readiness</h2>
+    <p class="sub">Map derived from official Anthropic technical docs (models, errors, rate limits, caching, vision, tool use) + community consensus on CCA-F. <b style="color:var(--warn)">It is NOT the official exam blueprint</b> — confirm your domain list against the official Anthropic Exam Guide / certification portal before sitting.</p>
+    <table class="plan">
+      <tr><th>Domain</th><th>Topic (verified from docs)</th><th>Guide</th><th>Q-banks</th></tr>
+      <tr><td class="day">Models &amp; Capabilities</td><td>Opus/Sonnet/Haiku trade-off; context window; max_tokens; aliases vs. dated snapshots</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Models</td><td>Vision / PDF &amp; multimodal source types, limits, limitations</td><td style="color:var(--warn)">◐</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">LLM Core</td><td>Tokens (~0.75/word) · temperature/top-p · streaming · why hallucination</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Prompt Eng.</td><td>System vs. user · few-shot · CoT · role · XML tags · JSON output</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Developer Platform</td><td>Messages fields · error codes (400/401/402/403/429/529) · retry/backoff · rate limits &amp; headers</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Dev Platform</td><td>Prompt caching (cache_control, TTLs) · Batch API · cost/latency levers</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Tools / MCP</td><td>tool_use loop · interleaved input_schema · client vs. server tools · MCP client/server · agents</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">RAG / Context</td><td>RAG definition · embeddings · vector search · chunking · grounding · retrieval-quality ceiling</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Safety</td><td>Constitutional AI · harm categories · prompt-injection defense · app guardrails · Bedrock/Vertex deployment</td><td style="color:var(--ok)">✔</td><td style="color:var(--ok)">✔</td></tr>
+      <tr><td class="day">Gaps to verify</td><td>Exact CCA-F pass %, # questions, timed length, &amp; any new-spec "extended/adaptive thinking" flags</td><td style="color:var(--warn)">verify</td><td style="color:var(--warn)">n/a</td></tr>
+    </table>
+    <ul class="tips">
+      <li><b>Legend:</b> <span style="color:var(--ok)">✔ = covered in guide &amp; quiz</span> · <span style="color:var(--warn)">◐ = partial in guide, confirmed in quiz</span> · <span style="color:var(--bad)">gap</span>.</li>
+      <li>Use the <b>per-domain score</b> in the exam results to mark each row ✔ when you hit 80%+ in that domain.</li>
+    </ul>
+  </section>
   <div class="foot">CCA-F Study Hub · Created from public Claude/Anthropic documentation &amp; platform knowledge. Always verify against the official Anthropic exam guide before sitting.</div>
 </div>
 </body>
