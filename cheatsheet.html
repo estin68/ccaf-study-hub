@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCA-F Cheat Sheet — 1-Page Exam-Day</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --card:#17171a; --card2:#1e1e23; --border:#2b2b33;
+    --text:#ece9e4; --muted:#a0a0ab; --accent:#d97757; --accent2:#e8b27c;
+    --ok:#7bc5a0; --warn:#e0b36a; --bad:#e07a7a;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0; padding:0; background:var(--bg); color:var(--text); line-height:1.4}
+  .topbar{position:sticky; top:0; z-index:50; background:rgba(13,13,15,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+  .topbar a{color:var(--accent2); text-decoration:none; font-weight:600}
+  .topbar .spacer{flex:1}
+  .btn{background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px 14px;
+    border-radius:8px; cursor:pointer; font-size:.85rem}
+  .btn:hover{border-color:var(--accent)}
+  .container{max-width:1000px; margin:0 auto; padding:20px}
+  header{padding:22px 16px; text-align:center; border-bottom:1px solid var(--border); margin-bottom:18px}
+  header h1{margin:0; font-size:1.6rem}
+  header h1 span{color:var(--accent)}
+  header p{color:var(--muted); max-width:760px; margin:8px auto 0; font-size:.9rem}
+  h2{font-size:1.05rem; color:var(--accent2); border-bottom:2px solid var(--accent); padding-bottom:6px; margin:22px 0 10px; text-transform:uppercase; letter-spacing:.5px}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px}
+  .card b{color:var(--accent); font-size:.95rem}
+  .card ul{margin:6px 0 0; padding-left:18px}
+  .card li{margin:4px 0; font-size:.88rem}
+  .card li b{color:var(--text)}
+  .key{color:var(--accent); font-weight:700}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+  .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8rem; background:var(--card2); padding:1px 5px; border-radius:4px; color:var(--accent2)}
+  .err{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px}
+  .err span{background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:.82rem}
+  .err b{color:var(--accent)}
+  .foot{text-align:center; color:var(--muted); font-size:.75rem; padding:22px 0}
+  @media print{
+    body{background:#fff; color:#000}
+    .topbar{display:none}
+    h2{color:#b3542f}
+    .card,.err span{background:#fff; color:#000; border-color:#bbb}
+    .code{background:#f0ece7; color:#7a3a1e}
+    .container{max-width:none}
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Study Hub</a>
+  <span style="color:var(--muted); font-size:.9rem">CCA-F 1-Page Cheat Sheet</span>
+  <span class="spacer"></span>
+  <button class="btn" onclick="window.print()">🖨 Print</button>
+</div>
+<div class="container">
+  <header>
+    <h1>CCA-F <span>Cheat Sheet</span></h1>
+    <p>Exam-day rapid recall guide. Memorize these must-know facts, then take a practice bank and mark your score. Verify against the official Anthropic Exam Guide before sitting.</p>
+  </header>
+
+  <h2>1 · Models &amp; Capabilities</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Model tiers</b>
+      <ul>
+        <li><b>Opus</b> = most capable, slowest, priciest</li>
+        <li><b>Sonnet</b> = balanced default</li>
+        <li><b>Haiku</b> = fastest/cheapest, high-volume light tasks</li>
+        <li>Tier = trade-off of <span class="key">capability ↔ speed ↔ cost</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Context vs. output</b>
+      <ul>
+        <li><span class="key">Context window</span> = total request token capacity (working memory)</li>
+        <li><span class="key">max_tokens</span> = cap on ONE response's output length</li>
+        <li>~<b>1M-token</b> windows on flagship models</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Model IDs</b>
+      <ul>
+        <li><span class="key">Dated</span> (e.g. <span class="code">claude-3-5-sonnet-20241022</span>) = pinned snapshot → deterministic</li>
+        <li><span class="key">Alias</span> (e.g. <span class="code">claude-sonnet-5</span>) = tracks latest stable in tier → auto-upgrade</li>
+        <li><span class="key">Vision:</span> accept images &amp; PDFs; source = base64 / URL / file_id; put images <i>before</i> text</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>2 · LLM Core Concepts</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Tokens &amp; sampling</b>
+      <ul>
+        <li>~<b>0.75 token ≈ 1 English word</b> → ~1000 tokens ≈ 750 words</li>
+        <li><span class="key">Low temperature</span> (0–0.3) = deterministic, best for JSON</li>
+        <li><span class="key">top-p</span> = most-probable-token subset by cumulative prob. mass</li>
+        <li><span class="key">Streaming</span> = lower perceived latency (deltas)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Why models hallucinate</b>
+      <ul>
+        <li>LLMs pick the most-likely next token — <b>no "truth" table</b></li>
+        <li>Thin/ambiguous context → plausible-but-false continuations</li>
+        <li>Fix = <span class="ok">grounding (RAG)</span> + clear evidence + verification</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>3 · Prompt Engineering</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Structure</b>
+      <ul>
+        <li><span class="key">System</span> = instructions/guards (keep untrusted data OUT)</li>
+        <li><span class="key">User</span> = the actual data/back-and-forth</li>
+        <li><span class="key">Few-shot</span> = 1–3 example pairs to teach format</li>
+        <li><span class="key">XML tags</span> = delimiters separating data from instructions</li>
+        <li><span class="key">Role prompt</span> e.g. "You are a senior..."</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Reliable JSON</b>
+      <ul>
+        <li>Ask: "return <b>ONLY</b> a JSON object matching this schema"</li>
+        <li>Provide exact fields + types</li>
+        <li>Combine with <b>low temperature</b> → deterministic</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>4 · Developer Platform</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Messages API — REQUIRED</b>
+      <ul>
+        <li><span class="code">model</span> + <span class="code">max_tokens</span> + <span class="code">messages</span></li>
+        <li>Everything else (system/tools/temp) optional</li>
+        <li>Access: Anthropic API, <b>AWS Bedrock</b>, <b>Google Vertex AI</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Cost &amp; latency levers</b>
+      <ul>
+        <li>Cheaper tier · smaller prompt token count · <span class="key">prompt caching</span> · <span class="key">Batch API</span> (~50% off, async/offline)</li>
+        <li><span class="key">RPM</span>/<span class="key">TPM</span> = requests/tokens per minute (quota, not model property)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>HTTP Error Codes</h2>
+  <div class="err">
+    <span><b>400</b> bad/malformed request (or spend cap)</span>
+    <span><b>401</b> auth — bad API key</span>
+    <span><b>402</b> billing problem</span>
+    <span><b>403</b> permission denied</span>
+    <span><b>404</b> not found</span>
+    <span><b>429</b> rate limit → back off + honor <span class="code">retry-after</span></span>
+    <span><b>500</b> server error</span>
+    <span><b>529</b> overloaded → exponential backoff</span>
+  </div>
+
+  <h2>5 · Tool Use, MCP &amp; Agents</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Tool loop</b>
+      <ul>
+        <li>Model returns <span class="code">tool_use</span> (name + JSON args)</li>
+        <li>YOUR app runs it, returns <span class="code">tool_result</span></li>
+        <li><span class="key">Client tools</span> = you define &amp; execute</li>
+        <li><span class="key">Server tools</span> = Anthropic runs (e.g. web_search)</li>
+        <li>Good <span class="key">description</span> + schema → better tool calls</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>MCP</b>
+      <ul>
+        <li><span class="key">Server</span> = exposes tools/capabilities/resources</li>
+        <li><span class="key">Client</span> = bridges model to servers, routes calls</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>6 · RAG &amp; Context Engineering</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Pipeline</b>
+      <ul>
+        <li><span class="key">Embed</span> docs → vectors</li>
+        <li><span class="key">Vector search</span> finds semantically relevant <b>chunks</b></li>
+        <li>Inject chunk into prompt → model answers from it (no retraining)</li>
+        <li>Grounding rule: <b>"say when not in context"</b></li>
+        <li>The <b>retrieval-quality ceiling</b> governs answer quality</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>7 · Safety, Guardrails &amp; Deployment</h2>
+  <div class="grid">
+    <div class="card">
+      <b>Constitutional AI</b>
+      <ul>
+        <li>Train on a written <b>"constitution"</b> of principles + feedback</li>
+        <li>Goal: helpful, harmless &amp; honest by default</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Defense-in-depth</b>
+      <ul>
+        <li>Treat <b>all user content as data</b> — keep out of system prompt</li>
+        <li>Delimit data from instructions (XML)</li>
+        <li>App guardrails: validate actions, least privilege, moderate, monitor</li>
+        <li>Deploy: Anthropic API / AWS Bedrock / Google Vertex AI</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="text-align:center; margin-top:20px">
+    Aim <span class="ok">80%+</span> twice on the <a href="practice-exam.html" style="color:var(--accent)">practice exam</a> before sitting.
+  </p>
+  <div class="foot">CCA-F Study Hub · Cheat sheet from public Anthropic docs &amp; platform knowledge. Verify against the official guide before sitting.</div>
+</div>
+</body>
+</html>
