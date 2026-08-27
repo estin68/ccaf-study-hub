@@ -98,14 +98,21 @@
 <div id="screen-setup" class="container">
   <header>
     <h1>CCA-F <span>Practice Exam</span></h1>
-    <p>50 realistic, exam-style multiple choice questions. Every answer includes a full explanation. Choose your mode, then start.</p>
+    <p>77 realistic, exam-style multiple choice questions across 3 banks — Exam 1 (Foundation), Exam 2 (Platform &amp; Day-2) and Exam 3 (Scenario Review). Every answer includes a full explanation. Pick a bank, domain &amp; mode, then start.</p>
   </header>
   <div class="setup">
     <h2>Configure your exam</h2>
     <p class="sub">Pick the scope &amp; time pressure that fits today's study session.</p>
+    <label>Question bank</label>
+    <select class="inp" id="sel-bank">
+      <option value="e1">Exam 1 — Foundation (50 Qs)</option>
+      <option value="e2">Exam 2 — Platform &amp; Day-2 (13 Qs)</option>
+      <option value="e3">Exam 3 — Scenario Review (14 Qs)</option>
+      <option value="all">ALL banks combined (77 Qs)</option>
+    </select>
     <label>Subject domains</label>
     <div class="grid2">
-      <div class="opt sel" id="opt-all" onclick="setScope('all',this)"><b>All</b><span>50 Qs · full exam</span></div>
+      <div class="opt sel" id="opt-all" onclick="setScope('all',this)"><b>All</b><span>full scope</span></div>
       <div class="opt" id="opt-random" onclick="setScope('random',this)"><b>Random 20</b><span>mixed-20 sprint drill</span></div>
     </div>
     <label>Mode</label>
@@ -237,7 +244,43 @@ const all=[
 {dom:'d7',q:"Who is responsible for safety in a deployed Claude application?",opts:["Only Anthropic","Anthropic's model alignment plus the architect's guardrails, input handling and monitoring","Only the end user","No one"],c:1,e:"Safety is shared: Anthropic aligns the model (Constitutional AI), and the architect owns inputs, guardrails, tool permissions, moderation and monitoring inside their application."},
 ];
 
-let scope='all', mode='learn', timerMin=30, curSel=null;
+// ===== EXAM 2 — Platform & Day-2 engineering (26 Qs) =====
+const exam2=[
+{dom:'d1',q:"A context window of roughly 1M tokens on a flagship Claude model means:",opts:["It can process an entire multi-hundred-thousand-token request in one pass","It must be reset every minute","It only applies to output, not input","It halves whenever tools are used"],c:0,e:"Large-context models (e.g. 1M-token windows) can accept very long requests — including lengthy documents and whole codebases — in a single pass, as working memory for the model."},
+{dom:'d1',q:"Which caps the maximum number of tokens a single response generates?",opts:["max_tokens","The context window only","Your request's temperature","System prompt length"],c:0,e:"max_tokens is the per-response output cap. The context window bounds the whole request; max_tokens bounds the reply length."},
+{dom:'d1',q:"A stable, always-moving model alias (e.g. claude-sonnet-5) is best used when you:",opts:["Want to track the latest stable release in a tier automatically","Need pixel-perfect, behavior-pinned output forever","Are writing a one-off script","Never want upgrades"],c:0,e:"Aliases resolve to the current stable release in a tier, following upgrades. A dated snapshot (e.g. claude-...-2025xxxx) pins exact behavior when you need determinism."},
+{dom:'d2',q:"How do embeddings + vector search help RAG retrieval?",opts:["They find the most semantically relevant chunks to inject","They compress images","They retrain the model","They replace the context window"],c:0,e:"Embeddings map text to numeric vectors so nearest-neighbor/vector search returns the most relevant chunks — the grounding input for a RAG answer."},
+{dom:'d2',q:"Streaming API responses are used in production mainly to:",opts:["Lower perceived latency by returning output as it generates","Increase the context window","Reduce model ability","Bypass auth"],c:0,e:"Streaming returns deltas in real time so users see content immediately, improving perceived latency for long generations."},
+{dom:'d3',q:"Where should non-negotiable guardrail rules live?",opts:["In the system prompt, kept separate from user data","Mixed into user input","Only in code comments","Randomly"],c:0,e:"Authoritative rules belong in the system layer, isolated from untrusted user content — the core anti-injection pattern."},
+{dom:'d3',q:"Showing the model 1–3 worked examples in a prompt is called:",opts:["Few-shot prompting","Random seeding","Prompt caching","Chain steps"],c:0,e:"Few-shot prompting presents example input→output pairs so the model mirrors the desired format/tone and edge handling."},
+{dom:'d4',q:"A clean design pattern to keep your API key secure is to:",opts:["Proxy requests through a backend that holds the key","Embed it in the frontend","Put it in a public gist","Email it to the team"],c:0,e:"Never ship keys to the browser; route API calls through a server-side proxy that owns the credential and applies policy."},
+{dom:'d4',q:"Which is REQUIRED in every Messages API request?",opts:["model, max_tokens and messages","temperature","tools","system"],c:0,e:"A minimal Messages call needs model, max_tokens and messages. Everything else is optional."},
+{dom:'d4',q:"Your API key is expired. Which status returns?",opts:["401","529","200","408"],c:0,e:"401 authentication_error means the API key is invalid/expired/revoked. 529 is service overload; 200 is success."},
+{dom:'d5',q:"Which statement about tool/function calling is TRUE?",opts:["The model returns a tool_use block with name + JSON arguments; your app runs them and returns tool_result","The model executes the tool itself","Tools auto-upsert rows","No schema is needed"],c:0,e:"In tool use, Claude returns a tool_use block; YOUR code performs the action, then sends back a tool_result so the model can continue."},
+{dom:'d5',q:"In the Model Context Protocol (MCP), a 'server' is the component that:",opts:["Exposes tools/capabilities and resources to clients","Runs the model","Stores logs only","Encrypts keys"],c:0,e:"MCP servers provide capabilities and resources; MCP clients connect them to the model and route tool calls to the right server."},
+{dom:'d6',q:"Which error code signals a malformed request?",opts:["400","529","200","413"],c:0,e:"400 (invalid_request_error) covers malformed/unsupported requests. Rate limits are 429, overloaded service is 529."},
+];
+
+// ===== EXAM 3 — Scenario review (14 Qs) =====
+const exam3=[
+{dom:'d2',q:"(Scenario) A support bot must never invent facts about your product docs. The most effective control is:",opts:["Grounding answers in retrieved docs + 'answer only from context' rule","Setting very high temperature","Maximizing max_tokens","Removing the system prompt"],c:0,e:"Retrieval-grounded answers with an honesty rule directly cut fabrication: write from provided context and say when data isn't there."},
+{dom:'d3',q:"(Scenario) An API only accepts valid JSON. The strongest final instruction is:",opts:["Return ONLY a single JSON object matching this schema","Use empathy","Use emoji separators","Reply in paragraphs"],c:0,e:"Explicit 'return only JSON with this schema', plus low temperature, yields deterministic, parseable structured output."},
+{dom:'d4',q:"(Scenario) You hit 429s at peak and need resilient throughput. Best practice:",opts:["Honor retry-after/backoff + defer bulk work to the Batch API","Send duplicates","Raise max_tokens","Ignore headers"],c:0,e:"Resilient clients honor retry-after with backoff, and move non-urgent bulk work to the Batch API to stay inside limits."},
+{dom:'d4',q:"(Scenario) A frontend exposes your API key. Correct fix:",opts:["Move API calls to a backend that holds the key","Ship it anyway","Put it in a public gist","Hardcode a throwaway key"],c:0,e:"Never expose keys in the browser; route through a server-side proxy that owns the credential and enforces policy."},
+{dom:'d5',q:"(Scenario) A step needs live web data beyond the knowledge cutoff. Best primitive:",opts:["A web_search / web_fetch server tool","Increase context.Retry","Always guess","Email the user"],c:0,e:"Server tools like web_search/web_fetch fetch current, live, cited data at call time — ideal beyond the training cutoff."},
+{dom:'d1',q:"(Scenario) Classify millions of tiny log snippets, cost-first. Pick:",opts:["The fastest/cheapest tier (Haiku)","Only Sonnet","Only claude.ai","No model"],c:0,e:"Use the lightest-capability, cheapest tier for simple high-volume tasks — cost and latency dominate that call."},
+{dom:'d6',q:"(Scenario) An agent must answer from two large policy PDFs. Best setup:",opts:["Embed + vector-search chunks, inject the matching chunk","Feed both PDFs fully every time","Ask the model to guess","Skip retrieval"],c:0,e:"RAG embeds the PDFs, retrieves only relevant chunk(s) per query and grounds the answer — keeping context small and answers accurate."},
+{dom:'d4',q:"(Scenario) Cost-tight team processes large offline bulk. Use:",opts:["The Batch API (async, cheaper)","Realtime streaming","Voice output","More warm-ups"],c:0,e:"The Batch API handles large asynchronous jobs at reduced cost — ideal for non-urgent bulk work like nightly enrichment."},
+{dom:'d7',q:"(Scenario) An HR assistant must not disclose salaries. Best hardening:",opts:["System-prompt rule + least-privilege retrieval","High temperature","Emoji doctrine","Longer prompts"],c:0,e:"Belt-and-braces: explicit system rules AND scope retrieval so private data isn't even available to generate from."},
+{dom:'d3',q:"(Scenario) Multi-turn chat memory is best kept as:",opts:["Full history + running summary with prompt caching","Reset each turn","Only last 2 user asks","A random doc"],c:0,e:"Preserve conversation history (and a summary) and prompt-cache the stable prefix — continuity with cheap turns."},
+{dom:'d1',q:"(Scenario) You want the app model to auto-improve over time. Use:",opts:["A tier alias (tracks latest release)","An exact dated snapshot forever","A random ID","No model"],c:0,e:"Aliases track the latest stable release in a tier, so the app follows improvements; dated snapshots pin behavior when determinism matters."},
+{dom:'d6',q:"(Scenario) RAG answers are poor because retrieval pulls the wrong chunks. What to fix first?",opts:["Retrieval relevance: chunking, embedding & ranking","Raise temperature","Bigger max_tokens","More docs"],c:0,e:"Garbage in, garbage out — retrieved-chunk relevance determines answer quality. Tune chunking, embedding and re-ranking first."},
+{dom:'d5',q:"(Scenario) Agents with tool access add risk. Main mitigation:",opts:["Least privilege, validate tool args & whitelist actions","Make the agent verbose","Add long sleeps","Grant full admin"],c:0,e:"As agents gain tools, scope permissions, validate inputs/actions and apply trust boundaries in the app layer."},
+{dom:'d7',q:"(Scenario) Users want to see a long answer build up. Best:",opts:["Stream the output","Return one final block","E-mail later","Freeze UI"],c:0,e:"Streaming surfaces deltas in real time, improving perceived latency for long generations."},
+];
+
+const BANKS = { e1:all, e2:exam2, e3:exam3, all:all.concat(exam2,exam3) };
+let scope='all', mode='learn', timerMin=30, curSel=null, bank='e1';
 let cur=[], idx=0, answers={}, score=0, timerID=null, timeLeft=0;
 
 function pick(set){
@@ -254,7 +297,8 @@ function setScope(v,el){ scope=v; ['opt-all','opt-random'].forEach(function(i){$
 function setMode(v,el){ mode=v; ['opt-learn','opt-exam'].forEach(function(i){$(i).classList.remove('sel')}); if(el)el.classList.add('sel'); }
 
 function start(){
-  cur=pick(all);
+  bank=$('sel-bank').value;
+  cur=pick(BANKS[bank]||all);
   if(!cur.length){ show('screen-empty'); clearTimer(); return; }
   answers={}; score=0; idx=0;
   timerMin=parseInt($('sel-timer').value||'0',10);
