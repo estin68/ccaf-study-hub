@@ -6,7 +6,11 @@ A self-contained study hub for the **Claude Certified Architect (Foundations)** 
 
 - **Home** (`index.html`) — course overview, section cards, quick navigation
 - **Study Guide** (`study-guide.html`) — organized study notes and review material
-- **Practice Exam** (`practice-exam.html`) — interactive practice questions with instant scoring
+- **Practice Exam** (`practice-exam.html`) — **50** interactive questions across all 7 domains with instant scoring, per-domain results, and full answer explanations. Timed and random-shuffle modes included.
+
+## Content coverage
+
+Claude models &amp; capabilities · LLM core concepts · prompt engineering · the developer platform / Messages API · tool use, MCP &amp; agents · RAG &amp; context engineering · safety, guardrails &amp; deployment.
 
 ## Live site
 

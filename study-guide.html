@@ -281,6 +281,8 @@
         <li>3. Message roles? <span class="ans">→ system (top), user, assistant.</span></li>
         <li>4. 429 = ? <span class="ans">→ Rate-limited / too many requests → back off &amp; retry.</span></li>
         <li>5. Cheapest way to run a big non-urgent job? <span class="ans">→ Batch API (cheaper, ~24h).</span></li>
+        <li>6. Service overloaded (status code)? <span class="ans">→ 529 → back off &amp; retry (exponential).</span></li>
+        <li>7. Same big prefix sent repeatedly? <span class="ans">→ Prompt caching — memoize the stable prefix to cut cost/latency.</span></li>
       </ul>
     </div>
   </section>
