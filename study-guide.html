@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCA-F Study Guide — Cornell + Feynman Notes</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --card:#17171a; --card2:#1e1e23; --border:#2b2b33;
+    --text:#ece9e4; --muted:#a0a0ab; --accent:#d97757; --accent2:#e8b27c;
+    --cue:#2a1a12; --sum:#141b16; --q:#1b1b2b; --ok:#7bc5a0; --bad:#e07a7a;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0; padding:0; background:var(--bg); color:var(--text); line-height:1.65}
+  .topbar{position:sticky; top:0; z-index:50; background:rgba(13,13,15,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+  .topbar a{color:var(--accent2); text-decoration:none; font-weight:600}
+  .topbar .spacer{flex:1}
+  .btn{background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px 14px;
+    border-radius:8px; cursor:pointer; font-size:.85rem}
+  .btn:hover{border-color:var(--accent)}
+  .btn.on{border-color:var(--accent); color:var(--accent)}
+  .container{max-width:960px; margin:0 auto; padding:20px}
+  header{padding:34px 20px; text-align:center; border-bottom:1px solid var(--border); margin-bottom:28px}
+  header h1{margin:0; font-size:2rem}
+  header h1 span{color:var(--accent)}
+  header p{color:var(--muted); max-width:760px; margin:12px auto 0}
+  .toc{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:30px}
+  .toc h2{margin:0 0 10px; font-size:1.2rem; color:var(--accent2)}
+  .toc ol{margin:8px 0; padding-left:22px; columns:2; column-gap:30px}
+  .toc li{margin:5px 0; break-inside:avoid}
+  .toc a{color:var(--text); text-decoration:none}
+  .toc a:hover{color:var(--accent)}
+  .toc .w{color:var(--muted); font-size:.8rem}
+.domain{margin:34px 0}
+  .domain-head{display:flex; align-items:baseline; gap:12px; border-bottom:2px solid var(--accent); padding-bottom:8px; margin-bottom:18px; scroll-margin-top:70px}
+  .domain-head .num{color:var(--accent); font-weight:800}
+  .domain-head h2{margin:0; font-size:1.5rem}
+  .domain-head .tags{margin-left:auto; color:var(--muted); font-size:.8rem}
+  .cornell{display:grid; grid-template-columns:220px 1fr; border:1px solid var(--border); border-radius:12px; overflow:hidden}
+  .cue{background:var(--cue); border-right:1px solid var(--border); padding:18px; font-size:.95rem}
+  .cue h4{margin:0 0 10px; color:var(--accent2); font-size:.8rem; text-transform:uppercase; letter-spacing:1px}
+  .cue ul{margin:0; padding-left:16px}
+  .cue li{margin:7px 0; color:var(--muted)}
+  .notes{background:var(--card); padding:18px 20px; font-size:.98rem}
+  .notes h4{margin:0 0 10px; color:var(--text); font-size:.9rem; text-transform:uppercase; letter-spacing:1px}
+  .notes p{margin:8px 0}
+  .notes .key{color:var(--accent); font-weight:600}
+  .notes table{width:100%; border-collapse:collapse; margin:10px 0; font-size:.92rem}
+  .notes th,.notes td{border:1px solid var(--border); padding:8px 10px; text-align:left}
+  .notes th{background:var(--card2); color:var(--accent2)}
+  .cornell-summary{grid-column:1 / -1; background:var(--sum); border-top:1px solid var(--border); padding:14px 20px}
+  .cornell-summary b{color:var(--ok)}
+  .cornell-summary p{margin:0; font-size:.92rem}
+  .feynman{background:var(--q); border-left:4px solid var(--accent2); border-radius:8px; padding:16px 20px; margin:18px 0 0}
+  .feynman .lbl{font-weight:800; color:var(--accent2); text-transform:uppercase; letter-spacing:1px; font-size:.75rem}
+  .feynman p{margin:8px 0 0}
+  .feynman .analogy{font-style:italic; color:var(--muted)}
+  .check{background:var(--card2); border:1px dashed var(--border); border-radius:8px; padding:14px 18px; margin:12px 0 0}
+  .check b{color:var(--accent)}
+  .check ul{margin:8px 0 0; padding-left:20px}
+  .check li{margin:6px 0; font-size:.95rem}
+  .check .ans{color:var(--ok); font-size:.88rem}
+  /* Feynman / active-recall mode */
+  body.mark .notes, body.mark .check{display:none}
+  .mode-note{display:none; background:rgba(232,178,124,.08); border:1px solid rgba(232,178,124,.3); color:var(--accent2); padding:10px 16px; border-radius:8px; margin-bottom:18px; font-size:.9rem}
+  body.mark .mode-note{display:block}
+  .foot{text-align:center; color:var(--muted); font-size:.8rem; padding:30px 0}
+  @media (max-width:760px){
+    .cornell{grid-template-columns:1fr}
+    .cue{border-right:0; border-bottom:1px solid var(--border)}
+    .toc ol{columns:1}
+    .topbar{gap:8px}
+  }
+  @media print{
+    body{background:#fff; color:#000}
+    .topbar{display:none}
+    .cornell,.notes{background:#fff; color:#000}
+    .cue{background:#f5f1ea}
+    .cornell-summary{background:#f0f7f2}
+    body.mark .notes,body.mark .check{display:block}
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Study Hub</a>
+  <span style="color:var(--muted); font-size:.9rem">CCA-F Cornell + Feynman Study Guide</span>
+  <span class="spacer"></span>
+  <button class="btn" id="mode-btn" onclick="document.body.classList.toggle('mark');this.classList.toggle('on');this.textContent=document.body.classList.contains('mark')?'✏ Cues Only (self-test) ON':'👁 Show Full Notes'">👁 Show Full Notes</button>
+  <button class="btn" onclick="window.print()">🖨 Print</button>
+</div>
+<div class="container">
+  <header>
+    <h1>Claude Certified Architect <span>· Foundations</span></h1>
+    <p>Cornell method: <b style="color:var(--accent2)">cues</b> on the left, <b>notes</b> on the right, <b style="color:var(--ok)">summary</b> on the bottom — plus a <b>Feynman lens</b> (explain-it-simply analogy) and a <b>quick-check</b> drill per domain. Click the topbar button to toggle into active-recall mode and answer the cues from memory.</p>
+  </header>
+
+  <nav class="toc">
+    <h2>Table of Contents — 7 Domains</h2>
+    <ol>
+      <li><a href="#d1">Claude Models &amp; Capabilities</a> <span class="w">· Day 1</span></li>
+      <li><a href="#d2">LLM Core Concepts</a> <span class="w">· Day 2</span></li>
+      <li><a href="#d3">Prompt Engineering</a> <span class="w">· Day 3</span></li>
+      <li><a href="#d4">Claude Developer Platform</a> <span class="w">· Day 4</span></li>
+      <li><a href="#d5">Tool Use, MCP &amp; Agents</a> <span class="w">· Day 5</span></li>
+      <li><a href="#d6">RAG &amp; Context Engineering</a> <span class="w">· Day 6</span></li>
+      <li><a href="#d7">Safety, Guardrails &amp; Deployment</a> <span class="w">· Day 7</span></li>
+    </ol>
+    <p style="margin:10px 0 0; color:var(--muted); font-size:.9rem">After each domain, run the <b style="color:var(--accent2)">Feynman loop</b>: ① teach it out loud in plain words → ② wherever you pause is your gap → ③ re-hide the notes and re-cue → ④ simplify your summary until it fits in one breath.</p>
+  </nav>
+</div>
+<div class="container" id="md">
+  <div class="mode-note">✏ <b>Self-test mode:</b> notes &amp; quick-check answers are hidden. Answer each cue from memory, reveal the notes, then simplify the summary. This is the Feynman loop.</div>
+
+  <section class="domain" id="d1">
+    <div class="domain-head"><span class="num">01</span><h2>Claude Models &amp; Capabilities</h2><span class="tags">Day 1 · ~30 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>What is Claude, and where can you use it?</li>
+          <li>Model tiers: Opus / Sonnet / Haiku — who picks which &amp; why?</li>
+          <li>What is a <b>context window</b>?</li>
+          <li>Input vs output limits (token terms)?</li>
+          <li>What can Claude do — name 4 capability areas.</li>
+          <li>What are RPM / TPM / RPD?</li>
+          <li>Latest-model naming convention (&lt;YYYY&gt;-&lt;MM&gt;-&lt;DD&gt;)?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">What is Claude?</span> Anthropic's family of large language models, accessible via <b>claude.ai</b> (chat), the <b>Claude Console</b> / <b>API</b> (programmatic), and cloud marketplaces: <b>AWS Bedrock</b> and <b>Google Vertex AI</b>.</p>
+        <table>
+          <tr><th>Tier</th><th>Trade-off</th><th>Typical use</th></tr>
+          <tr><td><b>Opus</b></td><td>Highest quality/reasoning; slower, pricier</td><td>Complex analysis, deep reasoning, hard coding</td></tr>
+          <tr><td><b>Sonnet</b></td><td>Balanced — strong + fast</td><td>Default for most production workloads &amp; agents</td></tr>
+          <tr><td><b>Haiku</b></td><td>Fastest &amp; cheapest; light reasoning</td><td>High-volume, simple tasks, classification</td></tr>
+        </table>
+        <p><span class="key">Context window</span> = total tokens the model can process at once (system prompt + conversation history + tools + new input). It is the "working memory" of the model, much larger than output limits. Claude's long-context models handle ~200K tokens; some newer models reach 1M token-scale windows. Larger context means you can paste whole codebases or books.</p>
+        <p><span class="key">Input vs output:</span> context limits the <b>input side</b> (everything in the request). <span class="key">max_tokens</span> caps the <b>output side</b> (a single response). A huge context does not mean the model can also output that much in one turn.</p>
+        <p><span class="key">Capabilities:</span> natural-language writing/analysis, <b>coding</b> (generation, debugging, refactoring), <b>vision</b> (images &amp; PDFs), <b>long-context</b> reasoning, <b>tool use</b> &amp; agentic workflows, <b>structured output</b> (JSON/XML).</p>
+        <p><span class="key">Rate limits</span> (per key/org): <b>RPM</b> = requests per minute, <b>TPM</b> = tokens per minute, <b>RPD</b> = requests per day. They gate raw throughput — not a model property, but a quota.</p>
+        <p><span class="key">Model naming:</span> dated versions like <code>claude-3-5-sonnet-20241022</code> pin a snapshot; use alias like <code>claude-sonnet-4</code> to get the latest stable in that tier.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> Claude = Anthropic's LLM family on claude.ai, the API, Bedrock &amp; Vertex. Pick the tier by cost/quality need: Opus = expert, Sonnet = default all-rounder, Haiku = fast &amp; cheap. The context window is the model's whole-working-memory input limit; max_tokens limits each response's output.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>Claude is like a brilliant remote team you hire by the minute. An enormous <b>context window</b> means the whole project wiki fits on one desk at once; <b>max_tokens</b> is how long a single memo they hand you back may be. Opus is the slow senior partner, Sonnet the dependable SWE, Haiku the quick intern sorting tickets.</p>
+      <p class="analogy">Analogy: hiring tiers ≠ intelligence, it's <b>deliberation effort</b>. Same assistant, more (Opus) or less (Haiku) time to think before answering.</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. Highest-volume task (log classification) → which tier? <span class="ans">→ Haiku (fastest/cheapest).</span></li>
+        <li>2. Paste a 150K-token codebase → what limit matters? <span class="ans">→ Input / context window.</span></li>
+        <li>3. Which marketplaces host Claude? <span class="ans">→ AWS Bedrock, Google Vertex AI.</span></li>
+        <li>4. RPM limits what? <span class="ans">→ Requests (not tokens) per minute.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="domain" id="d2">
+    <div class="domain-head"><span class="num">02</span><h2>LLM Core Concepts</h2><span class="tags">Day 2 · ~30 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>What is a <b>token</b>? ~ how many per typical word?</li>
+          <li>Temperature — effect &amp; sensible range?</li>
+          <li>Top-p — what does it control?</li>
+          <li>How do models "predict"? (next-token)</li>
+          <li>Why streaming &amp; async?</li>
+          <li>Context window vs output — recap trap</li>
+          <li>How are LLMs trained (brief)?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">Tokens</span> are chunks of text the model reads &amp; writes. ~<b>0.75 token ≈ 1 word</b> in English (a common 750→1,000-token-per-page rule of thumb). Billing, context, and rate limits are all token-based.</p>
+        <p><span class="key">Temperature</span> (0–1, default ~1) controls <b>randomness / creativity</b>. Lower (e.g., 0–0.3) = focused, deterministic, better for extraction &amp; structured data; higher = more varied, creative brainstorming. For <b>JSON / structured output</b>, keep it low.</p>
+        <p><span class="key">Top-p</span> (nucleus sampling): sample only from the smallest set of tokens whose combined probability ≥ <b>p</b>. Lower top-p = more focused; higher = more diverse. Often you move one knob at a time (temperature OR top-p), not both.</p>
+        <p><span class="key">Next-token prediction:</span> Claude generates by repeatedly choosing the next most-probable token given all tokens so far. It has no "intent"; it produces the statistically most natural continuation — which is why <b>clear prompts &amp; examples dramatically shape output</b>.</p>
+        <p><span class="key">Streaming</span> returns tokens as they're produced (better UX / perceived latency); <b>async</b> lets you manage multiple requests. <span class="key">Training</span> = large-scale next-token learning on text + <b>constitutional</b> RLHF-style alignment to make Claude helpful &amp; harmless.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> LLMs predict the next token given all prior tokens; you control that prediction with sampling params. Temperature = creativity/randomness, top-p = diversity of candidate pool. Everything (cost, limits, context) is counted in tokens, and streaming/async shape production usage.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>Claude is an autocomplete on steroids: it just guesses the next best word, over and over. <b>Temperature</b> is how "surprising" its guesses may be (low = always picks the obvious word; high = sometimes picks something unusual). <b>Top-p</b> is like telling it "only choose among the top P% of likely options."</p>
+      <p class="analogy">Analogy: autocomplete on your phone vs. an author. Same engine — the <b>knobs</b> and the <b>prompt</b> decide whether you get a terse memo or a novel.</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. Get valid JSON — raise or lower temperature? <span class="ans">→ Lower (focused/deterministic).</span></li>
+        <li>2. top-p does what? <span class="ans">→ Limits sampling to the top p-probability mass.</span></li>
+        <li>3. ~How many tokens per English word? <span class="ans">→ ~0.75 token/word ≈ 1000 tokens/~750 words.</span></li>
+        <li>4. Why streaming? <span class="ans">→ Tokens appear as generated → faster perceived response.</span></li>
+      </ul>
+    </div>
+  </section>
+<section class="domain" id="d3">
+    <div class="domain-head"><span class="num">03</span><h2>Prompt Engineering</h2><span class="tags">Day 3 · ~40 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>Most important prompt skill (one word)?</li>
+          <li>System vs user role?</li>
+          <li>Few-shot / examples — why help?</li>
+          <li>Chain-of-thought &amp; "role" prompting?</li>
+          <li>XML tags / delimiters — when to use?</li>
+          <li>Forcing valid JSON output?</li>
+          <li>How do excuses/ambiguity hurt output?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">Clarity wins.</span> The #1 rule: be specific and unambiguous. Vague input → confident-but-wrong output. Include role, task, format, and constraints.</p>
+        <p><span class="key">System prompt</span> sets global behavior (persona, rules, tone, guardrails) and persists across turns. <span class="key">User prompt</span> is the current instruction/question. Anthropic encourages a "pretend you're a &lt;role&gt; — &lt;task&gt; — write in this format" structure.</p>
+        <p><span class="key">Few-shot:</span> provide 1–3 input→output <b>examples</b>. Claude pattern-matches them, improving format &amp; style consistency far better than describing the format.</p>
+        <p><span class="key">Chain-of-thought</span>: ask Claude to reason step-by-step (or "think before answering") for complex tasks → more accurate. <span class="key">Role prompts</span> ("You are a senior architect…") steer expertise/tone.</p>
+        <p><span class="key">XML tags</span> (<code>&lt;instructions&gt;…&lt;/instructions&gt;</code>, <code>&lt;context&gt;…&lt;/context&gt;</code>) separate data from instructions inside the prompt, reducing ambiguity — especially when the text itself contains instruction-like content. <b>Never</b> put untrusted data directly into the system prompt (prompt-injection risk).</p>
+        <p><span class="key">Structured/JSON output:</span> request "respond only with valid JSON" + show the schema <b>and</b> an example; use a low temperature; on the API you can request <b>structured outputs</b> that follow JSON Schema. Validate the response in code; never assume validity.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> Good prompting = specific role + clear task + desired format + examples. Use system vs user roles, few-shot examples, chain-of-thought for reasoning, and XML tags/delimiters to separate data from instructions. For JSON, say so, show a schema, keep temperature low, and validate in code.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>Prompting is <b>briefing a brilliant but literal contractor</b>. If you say "make it better," they guess and usually guess wrong. If you say "you are the lead architect; here's the spec; respond as JSON with fields id and plan; here's one example," you get exactly the deliverable you want.</p>
+      <p class="analogy">Analogy: an <b>example is worth a thousand format descriptions</b>. Claude copies what you show it, so always show, don't just describe.</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. Best way to guarantee a format? <span class="ans">→ Provide a concrete example (few-shot).</span></li>
+        <li>2. System vs user prompt? <span class="ans">→ System = global rules/behavior; user = current ask.</span></li>
+        <li>3. How to get valid JSON? <span class="ans">→ "Respond only with JSON" + schema + low temp + validate.</span></li>
+        <li>4. Why XML tags? <span class="ans">→ Separate data from instructions; cut ambiguity.</span></li>
+      </ul>
+    </div>
+  </section>
+<section class="domain" id="d4">
+    <div class="domain-head"><span class="num">04</span><h2>Claude Developer Platform</h2><span class="tags">Day 4 · ~40 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>Where do you build &amp; get API keys?</li>
+          <li>REST endpoint &amp; key header?</li>
+          <li>Messages API roles?</li>
+          <li>Core request fields?</li>
+          <li>SDKs — Python/TS?</li>
+          <li>Why batch, caching &amp; cost control?</li>
+          <li>Key security practice?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">Claude Console</span> is the web dashboard (claude.ai ≠ console: <b>console.anthropic.com</b> is where developers create API keys, monitor usage, and test). API keys are <code>sk-ant-…</code> and are used in the <code>authorization: Bearer &lt;key&gt;</code> header (or <code>x-api-key</code>).</p>
+        <p><span class="key">Messages API</span> is the primary interface: <code>POST /v1/messages</code> with <b>roles</b> <code>system</code> (optional top-level) and an array of <code>user</code>/<code>assistant</code> turns. Core fields: <code>model</code>, <code>max_tokens</code> (required), <code>messages</code>, plus optional <code>temperature</code>, <code>top_p</code>, <code>system</code>, <code>tools</code>, <code>stream</code>.</p>
+        <p><span class="key">SDKs</span> (Python <code>anthropic</code>, TypeScript <code>@anthropic-ai/sdk</code>) wrap auth, requests, streaming, &amp; errors. Other SDKs (LangChain, etc.) exist but the official ones are the baseline.</p>
+        <p><span class="key">Errors</span> are HTTP codes (401 auth, 429 rate-limit, 400 bad request, 529 overloaded). Good clients retry with backoff + honor <code>retry-after</code>.</p>
+        <p><span class="key">Production:</span> <b>costs are token-based</b>; cache/shorter prompts and pick cheaper tiers for trivial work. <b>Batch API</b> lowers cost &amp; raises throughput for non-urgent jobs (results in hours, ~50% cheaper). <span class="key">Security:</span> keep keys server-side; scope via <b>API keys</b> in the console; never ship keys in client-side code.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> Build in the Console, call <code>/v1/messages</code> with model + messages + max_tokens over HTTPS, using the official Python/TS SDK. Manage cost with tier choice, prompt size, and the batch endpoint; protect keys server-side and handle 4xx/5xx with retry/backoff.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>The Claude API is like <b>ordering coffee at a counter</b>: an HTTPS POST is your order, the API key is your ID card, <code>model</code> is which barista tier you want, <code>max_tokens</code> is how big a cup you'll accept, and <code>messages</code> is the conversation you hand over. The console is the kitchen where you get your card and watch your spend.</p>
+      <p class="analogy">Analogy: batch = post a letter (cheap, slow, comes back ~a day later) vs. streaming = a live phone call (fast, token by token).</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. Where do I create API keys? <span class="ans">→ Claude Console (console.anthropic.com).</span></li>
+        <li>2. Required request field besides model &amp; messages? <span class="ans">→ max_tokens.</span></li>
+        <li>3. Message roles? <span class="ans">→ system (top), user, assistant.</span></li>
+        <li>4. 429 = ? <span class="ans">→ Rate-limited / too many requests → back off &amp; retry.</span></li>
+        <li>5. Cheapest way to run a big non-urgent job? <span class="ans">→ Batch API (cheaper, ~24h).</span></li>
+      </ul>
+    </div>
+  </section>
+<section class="domain" id="d5">
+    <div class="domain-head"><span class="num">05</span><h2>Tool Use, MCP &amp; Agents</h2><span class="tags">Day 5 · ~45 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>What is <b>tool use</b> (function calling)?</li>
+          <li>The tool <b>loop</b> — steps?</li>
+          <li>What is <b>MCP</b>?</li>
+          <li>MCP server vs client role?</li>
+          <li>Example MCP tools?</li>
+          <li>What makes an <b>agent</b>?</li>
+          <li>Tool definition = name/desc/…?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">Tool use</span> lets Claude <b>call functions</b> you define (search, DB, calculator, code exec). You define tools with <code>name</code>, <code>description</code> (crucial — the model picks tools by it), and input <code>input_schema</code> (JSON Schema). Tools can be declared in the request with <code>tools=[…]</code>.</p>
+        <p><span class="key">The tool loop:</span> ① You send message + tools → ② Claude replies with a <code>tool_use</code> block (it does <b>not</b> execute) → ③ Your code runs the tool and returns a <code>tool_result</code> user-turn → ④ send it back; Claude gives the final answer (or calls another tool). This loop repeats until done.</p>
+        <p><span class="key">MCP</span> (Model Context Protocol) is an <b>open standard</b> connecting models to tools/data. An <b>MCP server</b> exposes capabilities (tools, resources, prompts); an <b>MCP client</b> (the app — Claude, Agent SDK) connects. One standard speeds up integration &amp; sharing.</p>
+        <p><span class="key">Agents</span> combine LLM + tools + a <b>loop</b> + environment access to pursue a goal, often autonomously across many steps. Claude Code / Agent SDK implement this. When you need decisions &amp; actions (not just text), tools+agents are the architecture answer.</p>
+        <p><span class="key">Security:</span> with tools and agents, validate destinations, scope permissions, and treat call arguments as untrusted input for your code.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> Tool use = give Claude defined functions; it emits tool_use, your app runs them, and you send tool_result back — repeat. MCP is the open standard for connecting models to tools/data. Agents are the loop of reasoning + tool calls toward a goal; strong descriptions &amp; access control are what make them useful and safe.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>Tool use is like <b>a chef who only cooks; you're the kitchen runner</b>. The recipe says "grab tomatoes" (tool_use). You fetch, hand them over (tool_result). Only after you've fetched does the chef finish the plate. Claude never touches the fridge itself — it just asks, and your code is the hands.</p>
+      <p class="analogy">Analogy: MCP is the <b>universal power outlet</b> — instead of wiring each appliance (tool) to each kitchen (app) differently, there's one standard socket. Agents = the chef who keeps deciding, step by step, what to do next until dinner is served.</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. Who executes built-in tools Claude requests? <span class="ans">→ Your application code, not Claude.</span></li>
+        <li>2. Order of the loop? <span class="ans">→ tool_use → your code runs → tool_result → reply.</span></li>
+        <li>3. What is MCP? <span class="ans">→ Open standard for connecting models ↔ tools/data.</span></li>
+        <li>4. Why is a tool's description important? <span class="ans">→ The model chooses which tool to call based on it.</span></li>
+        <li>5. What makes a system an "agent"? <span class="ans">→ Reasoning loop + tools it can act on, toward a goal.</span></li>
+      </ul>
+    </div>
+  </section>
+<section class="domain" id="d6">
+    <div class="domain-head"><span class="num">06</span><h2>RAG &amp; Context Engineering</h2><span class="tags">Day 6 · ~45 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>What does <b>RAG</b> stand for? Why?</li>
+          <li>Embeddings — what are they of?</li>
+          <li>Vector search / similarity?</li>
+          <li>Chunking &amp; why it matters?</li>
+          <li>How does RAG reduce hallucination?</li>
+          <li>Grounding cautions?</li>
+          <li>Retrieval vs. context engineering?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">RAG</span> = Retrieval-Augmented Generation. You <b>retrieve relevant data</b> from a knowledge base and inject it into the prompt, so Claude answers from your data rather than only memory. This enables private/up-to-date knowledge without retraining.</p>
+        <p><span class="key">Embeddings</span> convert text → <b>dense numeric vectors</b> that capture meaning. <b>Vector search</b> finds text whose embedding is "closest" (cosine/dot) to the query — i.e., semantically similar, far better than keyword match for meaning.</p>
+        <p><span class="key">Pipeline:</span> ① ingest docs → ② <b>chunk</b> into pieces → ③ embed chunks → ④ store in a vector DB → ⑤ at query time embed the question → ⑥ retrieve top-k → ⑦ place them in context with a grounding instruction → ⑧ Claude answers <i>primarily</i> from them, citing/quoting.</p>
+        <p><span class="key">Chunking:</span> split text into meaningful, sized chunks (with overlap) so retrieval finds precise, self-contained pieces — too-big chunks dilute relevance; too-small lose context.</p>
+        <p><span class="key">Why it helps:</span> grounds answers in real data → fewer confident fabrications ("hallucinations"), enables citation, and updates without retraining. <b>Caveats:</b> retrieval quality limits everything ("garbage in → garbage out"); poor/irrelevant retrieval can mislead more than no retrieval. Always instruct the model to say when info isn't present rather than guessing.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> RAG = retrieve relevant chunks (via embeddings + vector search) into the prompt so Claude answers from your data with citations — reducing hallucination and keeping info fresh without retraining. Chunk well, embed for meaning, and let the model acknowledge when it doesn't know rather than fabricate.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>RAG is like <b>giving an open-book test</b>. Instead of making Claude answer from memory (where it may "remember" wrong), you place the relevant pages on the desk first. Embeddings are the <b>smart filing-system index</b> that finds "pages about X" by meaning, not just exact words. Retrieval is the TOC lookup; the generation is the answer written from the open book.</p>
+      <p class="analogy">Analogy: memory-based LLM = a closed-book expert (fast, forgets, might bluff). RAG = same expert handed the right chapters (accurate, citable). The quality ceiling is <b>how well you found the chapters</b>.</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. RAG stands for? <span class="ans">→ Retrieval-Augmented Generation.</span></li>
+        <li>2. What are embeddings? <span class="ans">→ Dense numeric vectors capturing text meaning.</span></li>
+        <li>3. Vector search finds …? <span class="ans">→ semantically similar chunks, not just keywords.</span></li>
+        <li>4. Why chunk? <span class="ans">→ precise, self-contained retrieval units.</span></li>
+        <li>5. Does RAG retrain the model? <span class="ans">→ No — it injects retrieved text into context.</span></li>
+      </ul>
+    </div>
+  </section>
+<section class="domain" id="d7">
+    <div class="domain-head"><span class="num">07</span><h2>Safety, Guardrails &amp; Deployment</h2><span class="tags">Day 7 · ~30 min</span></div>
+    <div class="cornell">
+      <div class="cue">
+        <h4>Cues</h4>
+        <ul>
+          <li>What is <b>Constitutional AI</b>?</li>
+          <li>Harm categories (concise)?</li>
+          <li>App-level guardrails?</li>
+          <li>Prompt injection? How to protect?</li>
+          <li>Deployment options (Bedrock/Vertex)?</li>
+          <li>Cost &amp; latency levers?</li>
+          <li>Responsibilities of the architect?</li>
+        </ul>
+      </div>
+      <div class="notes">
+        <h4>Notes — READ &amp; RECALL</h4>
+        <p><span class="key">Constitutional AI</span> is Anthropic's alignment method: models are trained to be helpful, harmless, &amp; honest using a written "constitution" of principles + feedback, instead of relying on human raters to detect harm. It aims to make Claude <b>refuse harmful requests</b> and be trustworthy by default.</p>
+        <p><span class="key">Harm categories</span> to architect against: violence/self-harm, sexual content, exploitation of children, hate/harassment/discrimination, illicit/illegal activity, weapons, deception (fraud), conflicts of interest (esp. in finance/abuse-of-trust contexts), and privacy. Anthropic provides safety/security resources &amp; a <b>Trust &amp; Safety</b> guidance for builders.</p>
+        <p><span class="key">App-level guardrails:</span> put strong, explicit rules in the system prompt; keep <b>untrusted data out of the system prompt</b>; treat tool-call arguments as untrusted; validate/whitelist actions; use a moderation step and content filters/safety settings; log &amp; monitor.</p>
+        <p><span class="key">Prompt injection / misuse:</span> users may try to override instructions. Defense-in-depth: separate data from instructions (XML tags), never treat user content as trusted instructions, add rule rewordings, cap the power of systems around the model.</p>
+        <p><span class="key">Deployment:</span> the same Claude models exist via the <b>Anthropic API</b> as well as <b>AWS Bedrock</b> and <b>Google Vertex AI</b>. Drivers: existing cloud, data residency, procurement/atting, budgets, and unified tooling. Cost/latency levers = model tier, token counts, caching, batch, streaming.</p>
+      </div>
+      <div class="cornell-summary"><p><b>Summary:</b> Claude is aligned via Constitutional AI; architects add their own guardrails (system rules, validating untrusted data, moderation, minimal permissions). Deploy via the Anthropic API or managed clouds (Bedrock/Vertex). Safety is a shared responsibility — model defaults + your app-level controls.</p></div>
+    </div>
+    <div class="feynman">
+      <span class="lbl">Feynman lens — explain it simply</span>
+      <p>Constitutional AI is like giving the model a <b>written code of conduct</b> and training it to judge itself against it — so its "default reflexes" are to be helpful and refuse harm. Your job as architect is the bouncer + fire warden on top: how you handle user input and what powers you grant the system determine whether it's safe at scale.</p>
+      <p class="analogy">Analogy: model = the trained employee (constitution); deployment = the workplace rules, doors that lock, and logbook (your guardrails, cloud choice, monitoring).</p>
+    </div>
+    <div class="check">
+      <b>Quick-check</b>
+      <ul>
+        <li>1. Constitutional AI aims to make Claude …? <span class="ans">→ helpful, harmless &amp; honest by construction.</span></li>
+        <li>2. Where do dangerous directions belong? <span class="ans">→ out of user/data control → system prompt, not untrusted content.</span></li>
+        <li>3. Main way to fight prompt-injection? <span class="ans">→ defense-in-depth: separate data, treat input as untrusted, limit power.</span></li>
+        <li>4. Meaning of unknown-word "grounding" command? <span class="ans">→ Instruct model to say "not in context" rather than bluff.</span></li>
+        <li>5. Managed deployment options? <span class="ans">→ Anthropic API, AWS Bedrock, Google Vertex AI.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="foot">CCA-F Cornell + Feynman study notes (7 domains). Pair each day's topic with the matching <a href="practice-exam.html">practice exam</a> drill. Verify against official Anthropic docs before the real exam.</div>
+</div>
+</body>
+</html>

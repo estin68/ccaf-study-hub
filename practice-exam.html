@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCA-F Practice Exam — 50 Questions with Explanations</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --card:#17171a; --card2:#1e1e23; --border:#2b2b33;
+    --text:#ece9e4; --muted:#a0a0ab; --accent:#d97757; --accent2:#e8b27c;
+    --ok:#7bc5a0; --okbg:#12211a; --bad:#e07a7a; --badbg:#2a1515; --info:#8ab4f8;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0; padding:0; background:var(--bg); color:var(--text); line-height:1.6}
+  .topbar{position:sticky; top:0; z-index:50; background:rgba(13,13,15,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  .topbar a{color:var(--accent2); text-decoration:none; font-weight:600}
+  .topbar .spacer{flex:1}
+  .timer{font-variant-numeric:tabular-nums; color:var(--accent); font-weight:700}
+  .btn{background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px 14px;
+    border-radius:8px; cursor:pointer; font-size:.85rem}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#17110e; font-weight:700}
+  .container{max-width:760px; margin:0 auto; padding:20px}
+  header{text-align:center; padding:28px 16px; border-bottom:1px solid var(--border); margin-bottom:20px}
+  header h1{margin:0; font-size:1.8rem} header h1 span{color:var(--accent)}
+  header p{color:var(--muted); margin:8px 0 0}
+  .setup{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:26px; margin:20px 0}
+  .setup h2{margin:0 0 6px; font-size:1.2rem; color:var(--accent2)}
+  .setup .sub{color:var(--muted); margin:0 0 18px; font-size:.9rem}
+  .setup label{display:block; margin:12px 0 6px; font-weight:600; color:var(--accent2); font-size:.85rem; text-transform:uppercase; letter-spacing:.5px}
+  .optrow{display:flex; gap:10px; flex-wrap:wrap}
+  .opt{flex:1; min-width:120px; background:var(--card2); border:1px solid var(--border); border-radius:10px;
+    padding:14px; cursor:pointer; text-align:center; transition:border-color .15s, background .15s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.sel{border-color:var(--accent); background:rgba(217,119,87,.12)}
+  .opt b{display:block; font-size:1.3rem} .opt span{font-size:.78rem; color:var(--muted)}
+  select.inp, input.inp{background:var(--card2); color:var(--text); border:1px solid var(--border);
+    border-radius:8px; padding:10px 12px; font-size:.95rem; width:100%}
+  .qcard{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:26px; margin-bottom:16px}
+  .qchip{display:inline-block; background:var(--card2); color:var(--accent2); border:1px solid var(--border);
+    border-radius:999px; padding:3px 12px; font-size:.75rem; margin-bottom:12px; text-transform:uppercase; letter-spacing:.5px}
+  .qtext{font-size:1.12rem; margin:0 0 18px}
+  .opts{display:grid; gap:10px}
+  .optbtn{display:flex; gap:12px; align-items:flex-start; text-align:left; background:var(--card2);
+    border:1px solid var(--border); border-radius:10px; padding:14px 16px; cursor:pointer; font-size:.97rem; color:var(--text); transition:all .15s}
+  .optbtn:hover:not(:disabled){border-color:var(--accent)}
+  .optbtn .letter{flex:0 0 26px; height:26px; border-radius:50%; background:var(--border); text-align:center; font-weight:700; line-height:26px; font-size:.85rem}
+  .optbtn.sel{border-color:var(--accent)}
+  .optbtn.correct{border-color:var(--ok); background:var(--okbg)} .optbtn.correct .letter{background:var(--ok); color:#0a1425}
+  .optbtn.wrong{border-color:var(--bad); background:var(--badbg)} .optbtn.wrong .letter{background:var(--bad); color:#fff}
+  .optbtn.dim{opacity:.5}
+  .explain{margin-top:18px; border-top:1px dashed var(--border); padding-top:16px; display:none}
+  .explain.show{display:block}
+  .explain .ehead{color:var(--ok); font-weight:700; margin-bottom:6px}
+  .explain.wrongcase .ehead{color:var(--bad)}
+  .explain p{margin:0; color:var(--text); font-size:.95rem}
+  .nav{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0 30px}
+  .ctr{color:var(--muted); font-size:.9rem}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  /* results */
+  .result{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:28px; text-align:center}
+  .bigscore{font-size:3.2rem; font-weight:800; margin:6px 0 2px}
+  .bigscore.pass{color:var(--ok)} .bigscore.fail{color:var(--bad)}
+  .badge{display:inline-block; padding:6px 16px; border-radius:999px; font-weight:700; font-size:.9rem; margin:8px 0}
+  .badge.pass{background:var(--okbg); color:var(--ok); border:1px solid var(--ok)}
+  .badge.fail{background:var(--badbg); color:var(--bad); border:1px solid var(--bad)}
+  .domain-scores{margin:22px 0; text-align:left; border-top:1px solid var(--border); padding-top:18px}
+  .domain-scores h3{margin:0 0 12px; color:var(--accent2); font-size:1rem}
+  .drow{display:flex; align-items:center; gap:12px; margin:6px 0; font-size:.9rem}
+  .dbar{flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden}
+  .dbar>span{display:block; height:100%; background:var(--accent)}
+  .drow .dname{flex:0 0 200px; color:var(--muted)}
+  .drow .dval{flex:0 0 64px; text-align:right; font-weight:700}
+  .review{margin:22px 0; text-align:left}
+  .review h3{margin:0 0 12px; color:var(--accent2); font-size:1rem}
+  .revitem{border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin:10px 0; background:var(--card2)}
+  .revitem .q{font-weight:600; margin-bottom:6px}
+  .revitem .yours{color:var(--bad); margin:2px 0}
+  .revitem .right{color:var(--ok); margin:2px 0}
+  .revitem .why{color:var(--muted); font-size:.88rem; margin-top:6px}
+  .muted{color:var(--muted)}
+  @media (max-width:640px){
+    .drow .dname{flex-basis:130px}
+    .grid2{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Study Hub</a>
+  <span style="color:var(--muted); font-size:.9rem">CCA-F Practice Exam</span>
+  <span class="spacer"></span>
+  <span id="timer-el" class="timer"></span>
+</div>
+
+<div id="screen-setup" class="container">
+  <header>
+    <h1>CCA-F <span>Practice Exam</span></h1>
+    <p>50 realistic, exam-style multiple choice questions. Every answer includes a full explanation. Choose your mode, then start.</p>
+  </header>
+  <div class="setup">
+    <h2>Configure your exam</h2>
+    <p class="sub">Pick the scope &amp; time pressure that fits today's study session.</p>
+    <label>Subject domains</label>
+    <div class="grid2">
+      <div class="opt sel" id="opt-all" onclick="setScope('all',this)"><b>All</b><span>50 Qs · full exam</span></div>
+      <div class="opt" id="opt-random" onclick="setScope('random',this)"><b>Random 20</b><span>mixed-20 sprint drill</span></div>
+    </div>
+    <label>Mode</label>
+    <div class="optrow">
+      <div class="opt sel" id="opt-learn" onclick="setMode('learn',this)"><b>Learn</b><span>see answer + explanation immediately</span></div>
+      <div class="opt" id="opt-exam" onclick="setMode('exam',this)"><b>Exam</b><span>answer all, then full review</span></div>
+    </div>
+    <label>Timer</label>
+    <select class="inp" id="sel-timer">
+      <option value="0">No timer</option>
+      <option value="60">60 min</option>
+      <option value="45">45 min</option>
+      <option value="30" selected>30 min</option>
+    </select>
+    <label>Only drill one domain (optional)</label>
+    <select class="inp" id="sel-domains">
+      <option value="all">All domains</option>
+      <option value="d1">Models &amp; Capabilities</option>
+      <option value="d2">LLM Core Concepts</option>
+      <option value="d3">Prompt Engineering</option>
+      <option value="d4">Developer Platform</option>
+      <option value="d5">Tools, MCP &amp; Agents</option>
+      <option value="d6">RAG &amp; Context</option>
+      <option value="d7">Safety &amp; Deployment</option>
+    </select>
+    <button class="btn primary" style="width:100%; margin-top:20px; padding:14px; font-size:1rem" onclick="start()">Start Exam</button>
+  </div>
+</div>
+
+<div id="screen-quiz" class="container" style="display:none">
+  <div class="progress">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pmeta"><span id="pmeta-left"></span><span id="score-sofar"></span></div>
+  </div>
+  <div class="qcard">
+    <span class="qchip" id="qchip"></span>
+    <p class="qtext" id="qtext"></p>
+    <div class="opts" id="opts"></div>
+    <div class="explain" id="explain"></div>
+  </div>
+  <div class="nav">
+    <button class="btn" id="prev-btn">← Previous</button>
+    <span class="ctr" id="ctr"></span>
+    <button class="btn primary" id="next-btn">Next →</button>
+  </div>
+</div>
+
+<div id="screen-result" class="container" style="display:none">
+  <div class="result">
+    <h2 style="margin:0; color:var(--accent2)">Your Score</h2>
+    <div class="bigscore" id="bigscore">0</div>
+    <div class="badge" id="badge">…</div>
+    <p class="muted" id="score-detail"></p>
+    <div class="nav">
+      <button class="btn primary bigbtn" onclick="restart()">Retake</button>
+      <button class="btn bigbtn" onclick="location.reload()">New Exam</button>
+    </div>
+  </div>
+  <div class="domain-scores" id="domain-scores"></div>
+  <div class="review" id="review"></div>
+</div>
+
+<div id="screen-empty" class="container" style="display:none">
+  <div class="result">
+    <p>No questions match that filter yet — choose another option.</p>
+    <button class="btn primary bigbtn" onclick="location.reload()">Back to Setup</button>
+  </div>
+</div>
+
+<script>
+const all=[
+// ===== DOMAIN 1: Claude Models & Capabilities =====
+{dom:'d1',q:"Which statement best describes Claude's model tiers (Opus, Sonnet, Haiku)?",opts:["They are the same model with cosmetic name differences","They trade off capability against speed and cost","Haiku is always the most accurate","Opus is intended for high-volume, trivial tasks"],c:1,e:"The Opus/Sonnet/Haiku tiers represent a capability↔speed↔cost trade-off. Opus is highest quality but slower/expensive; Sonnet is the balanced default; Haiku is fastest/cheapest for high-volume light tasks."},
+{dom:'d1',q:"You must classify millions of short log lines daily at the lowest cost. Which tier is the best fit?",opts:["Opus","Sonnet","Haiku","Vertex AI only"],c:2,e:"Haiku is Anthropic's fastest and cheapest tier, ideal for high-volume, relatively simple tasks like log classification. Opus/Sonnet would waste cost on trivial work."},
+{dom:'d1',q:"What does a model's 'context window' represent?",opts:["The maximum number of tokens the model can process across the whole request (input side)","The maximum length of a single response only","The number of API calls allowed per minute","The training data cutoff date"],c:0,e:"The context window is the total token capacity of the request — system prompt, history, tools and new input. It is the model's working memory; max_tokens separately caps each response's output."},
+{dom:'d1',q:"Which of these limits the OUTPUT length of a single Claude response?",opts:["context window","max_tokens","RPM / TPM rate limits","system prompt"],c:1,e:"max_tokens caps how many tokens Claude may generate in one response. The context window bounds the input side, and RPM/TPM are throughput quotas, not per-response length caps."},
+{dom:'d1',q:"Where can developers access Claude programmatically? (pick the most complete answer)",opts:["Only claude.ai chat","The Claude API only","The Claude API, plus AWS Bedrock and Google Vertex AI","Only through third-party no-code tools"],c:2,e:"Claude is available via the Anthropic Messages/API and on managed cloud platforms — AWS Bedrock and Google Vertex AI. claude.ai is the chat product, not the developer API."},
+{dom:'d1',q:"What do the acronyms RPM and TPM refer to?",opts:["Requests per minute and tokens per minute","Rows per model and tokens per model","Responses per minute and temperature per minute","Runs per month and tokens per month"],c:0,e:"RPM limits requests per minute and TPM limits tokens per minute — these are throughput / rate-limit quotas applied to your API key or organization, not model properties."},
+{dom:'d1',q:"A dated model ID such as claude-3-5-sonnet-20241022 indicates:",opts:["The model is permanently retired","A pinned snapshot (model + date) so behavior stays stable","That Claude was trained on data only before that date","A free Beta endpoint"],c:1,e:"Dated model IDs pin a specific model snapshot as of that date, giving deterministic behavior. Aliases (e.g., claude-sonnet-4) track the latest stable release in a tier instead."},
+// ===== DOMAIN 2: LLM Core Concepts =====
+{dom:'d2',q:"Roughly how many English words does ~1000 tokens represent?",opts:["About 750 words","About 10,000 words","About 100 words","Exactly 1000 words"],c:0,e:"As a rule of thumb about 0.75 token ≈ 1 English word, so ~1000 tokens ≈ ~750 words. Token counts vary by language and word length."},
+{dom:'d2',q:"You need deterministic, valid JSON from Claude. Which sampling setting is most appropriate?",opts:["High temperature (e.g., 1.0) with high top-p","Low temperature (e.g., 0–0.3)","Set max_tokens very high","Disable the API key"],c:1,e:"Lower temperature reduces randomness and makes output more focused/deterministic — ideal for structured tasks like JSON. High temperature increases creativity at the cost of consistency."},
+{dom:'d2',q:"What does the 'top-p' sampling parameter control?",opts:["How many tokens can fit in the output","The subset of most-probable tokens considered, by cumulative probability mass","The maximum prompt length","The model's training temperature"],c:1,e:"Top-p (nucleus sampling) keeps only the smallest set of tokens whose combined probability is at least p; lower p gives more focused output, higher p more variety."},
+{dom:'d2',q:"At a high level, how does a language model generate its response?",opts:["By looking up answers in a fixed database","By repeatedly predicting the next most probable token given all previous tokens","By running a deterministic search engine","By copying a template for every question"],c:1,e:"LLMs generate by next-token prediction — at each step they pick the most probable next token given the prior context. This is why prompt quality and examples so strongly shape the result."},
+{dom:'d2',q:"Why is 'streaming' commonly used in production chat apps?",opts:["It makes the model smarter","Tokens appear as they are generated, improving perceived latency","It automatically fixes hallucinations","It reduces the context window"],c:1,e:"Streaming returns output tokens incrementally as they're produced, so the user sees the response building up — better perceived responsiveness than waiting for the full reply."},
+{dom:'d2',q:"Because an LLM essentially 'repeats the statistically most natural continuation' of its context, which practical consequence matters for builders?",opts:["Prompts and examples have little effect on output","Clear prompts and few-shot examples strongly shape the output","Temperature does nothing","All models behave identically"],c:1,e:"Since the model continues from context rather than 'searching', the prompt, instructions and examples all strongly steer the completion. Crafting them is core to prompt engineering."},
+// ===== DOMAIN 3: Prompt Engineering =====
+{dom:'d3',q:"Which is the single most important quality of an effective prompt?",opts:["Length","Specificity / clarity","Emotional appeal","Frequent exclamation marks"],c:1,e:"Clarity and specificity beat everything. Vague prompts produce confident-but-wrong answers; precise role + task + format + constraints get reliable, on-target output."},
+{dom:'d3',q:"In the Messages API, the 'system' prompt is best used for:",opts:["The user's current question","Global behavior, persona and rules that persist across the conversation","Utility tool calls","Random brainstorming context"],c:1,e:"The system prompt sets the model's persistent behavior and guardrails. The user prompt carries the current request; tools are a separate field."},
+{dom:'d3',q:"Your model keeps returning prose when you need a specific table format. The most reliable fix is to:",opts:["Ask it to be simpler","Provide a concrete example of the desired output (few-shot)","Increase temperature to 1.0","Repeat the instruction five times"],c:1,e:"A concrete input→output example (few-shot) is the most reliable way to lock in a format. Describing a format is weaker than showing it, because Claude pattern-matches on examples."},
+{dom:'d3',q:"Why does 'chain-of-thought' (asking the model to reason step by step) tend to improve accuracy on complex problems?",opts:["It makes the model faster","It structures the intermediate reasoning, leading to a better final answer","It disables training data","It forces shorter answers"],c:1,e:"Walking through intermediate steps organizes reasoning and reduces errors on multi-step tasks. It's a well-established prompt pattern for harder problems."},
+{dom:'d3',q:"When a user uploads text that itself contains instructions, the safest prompt structure is to:",opts:["Merge it into the system prompt verbatim","Wrap untrusted/uploaded content in XML/delimiter tags and instruct Claude to treat it as data, not instructions","Ignore all uploaded content","Give the upload admin access"],c:1,e:"Delimit untrusted content (e.g., <document>…</document>) and tell Claude it is data to analyze, not instructions to follow. This reduces prompt-injection risk — never embed untrusted text as instructions in the system prompt."},
+{dom:'d3',q:"To get reliably valid JSON from Claude, best practice includes:",opts:["Ask for JSON, use low temperature, describe the schema and validate the output in code","Ask for JSON and never validate","Use the highest temperature","Request JSON only in the system prompt"],c:1,e:"Best practice: explicitly request only-JSON, provide the schema (and ideally an example), keep temperature low, and validate/parse the response in your application rather than assuming it is correct."},
+{dom:'d3',q:"A 'role' prompt such as 'You are a senior solutions architect' primarily influences:",opts:["The model's compute cost","The persona, tone and domain framing of the response","The context window size","The maximum tokens"],c:1,e:"Role prompts set persona and domain framing, steering how Claude responds (tone, vocabulary, assumptions). They don't change cost, context, or output caps."},
+// ===== DOMAIN 4: Claude Developer Platform =====
+{dom:'d4',q:"Where does a developer typically create and manage Claude API keys?",opts:["The claude.ai chat app","The Claude Console (console.anthropic.com)","AWS Route 53","A mobile settings page"],c:1,e:"API keys, usage monitoring and testing are managed in the Claude Console (console.anthropic.com). claude.ai is the consumer chat product, not the developer console."},
+{dom:'d4',q:"Which field is REQUIRED in every Messages API request along with 'model' and 'messages'?",opts:["temperature","max_tokens","top_p","stream"],c:1,e:"max_tokens is required in Claude Messages calls (it bounds the response). temperature, top_p and stream are optional."},
+{dom:'d4',q:"Which HTTP status normally indicates you've been rate-limited?",opts:["200","401","429","500"],c:2,e:"429 Too Many Requests signals rate limiting. 401 is auth failure. A robust client should back off and retry, ideally honoring retry-after."},
+// ===== DOMAIN 5: Tool Use, MCP & Agents =====
+{dom:'d5',q:"When Claude performs tool/function calling, who actually executes the tool?",opts:["Claude itself runs the tool internally","Your application code executes it after Claude requests it","The MCP server never runs tools","Claude only guesses the result"],c:1,e:"Tool use is a two-step flow: Claude emits a tool_use request; your application executes the actual function and returns a tool_result. The model cannot run code or hit APIs itself — it only asks."},
+{dom:'d5',q:"Which is the correct order of the tool-use loop?",opts:["Run tool → model decides again → no result needed","Model emits tool_use → your code runs the tool → you return tool_result → model responds","tool_result first, then model asks for tool_use","None of the above"],c:1,e:"The loop is: send message+tools → Claude replies with tool_use → your code executes and returns tool_result → send it back → Claude gives the final answer (or requests another tool)."},
+{dom:'d5',q:"What is the Model Context Protocol (MCP)?",opts:["A proprietary Anthropic-only API","An open, standardized way to connect models/apps to tools and data sources","A database query language","A model fine-tuning method"],c:1,e:"MCP is an open standard that lets any model client connect to tools, resources and prompts exposed by MCP servers — reducing bespoke integration work for each tool."},
+{dom:'d5',q:"In MCP terms, which component EXPOSES capabilities (tools/resources), and which CONNECTS to them?",opts:["Client exposes, server connects","Server exposes, client connects","Both are servers","Neither"],c:1,e:"An MCP server exposes capabilities (tools, resources, prompts); an MCP client (such as a Claude app or the Agent SDK) connects to servers to use those capabilities."},
+{dom:'d5',q:"Why is a tool's 'description' important when defining it?",opts:["It has no effect on behavior","Claude uses it to decide which tool to call for a given task","It controls the output token budget","It encrypts the tool result"],c:1,e:"Descriptions are how Claude selects tools. A clear, accurate description of what a tool does and when to use it is critical to reliable function calling."},
+{dom:'d5',q:"What typically distinguishes an 'agent' architecture from plain tool calling?",opts:["Agents never call tools","An agent combines an LLM with tools and a reasoning/action loop to pursue a goal, often across many steps","Agents cannot use MCP","Agents always run on device"],c:1,e:"Agents loop: reason → call tools → observe results → reason again, moving toward a goal. Plain tool calling is a single model→tool round trip; agents chain many of them autonomously."},
+{dom:'d5',q:"A good security habit when building with tools/agents is to:",opts:["Give every tool unrestricted access","Treat tool-call arguments as untrusted input and validate/scoping actions","Disable API keys","Skip logging"],c:1,e:"Tool calls let models act in your system, so validate arguments, scope permissions, whitelist allowed actions and log activity — treat anything the model or users influence as untrusted."},
+{dom:'d4',q:"To run a large, non-urgent job at reduced cost and higher throughput, the best mechanism is the:",opts:["Batch API","Streaming API only","System prompt","Async chat UI"],c:1,e:"The Batch API processes jobs asynchronously (results arrive over hours) at ~50% lower cost and higher throughput — ideal for non-urgent bulk work. Streaming is about latency, not bulk cost."},
+{dom:'d4',q:"Which is the correct security practice for API keys?",opts:["Embed them in client-side JavaScript","Store them server-side and never ship them to the browser","Paste them into public repos for teammates","Share them in support tickets"],c:1,e:"Keys must be kept server-side, out of client/browser code and out of public repos. They authenticate paid usage, so a leak is a cost and security incident."},
+// ===== DOMAIN 6: RAG & Context Engineering =====
+{dom:'d6',q:"RAG stands for:",opts:["Random Access Generation","Retrieval-Augmented Generation","Recursive Agent Graph","Runtime API Gateway"],c:1,e:"RAG = Retrieval-Augmented Generation: retrieving relevant data and adding it to the model's context so answers are grounded in that data."},
+{dom:'d6',q:"What are text embeddings?",opts:["Encrypted text files","Dense numeric vectors that encode the meaning of text for similarity search","Compressed images","Prompt templates"],c:1,e:"Embeddings map text to dense vectors such that semantically similar text is close in vector space — enabling meaning-based (not just keyword) retrieval."},
+{dom:'d6',q:"Vector search helps retrieval mainly because it:",opts:["Is always faster than any keyword search","Finds chunks semantically similar to the query, not just keyword matches","Requires no data to be indexed","Ignores meaning"],c:1,e:"Vector/embedding search matches on semantic similarity, so it surfaces relevant text even when exact keywords differ."},
+{dom:'d6',q:"Why is chunking documents into pieces important in a RAG pipeline?",opts:["To make files smaller on disk","So retrieval returns precise, self-contained units rather than huge or fragmented blobs","To encrypt the data","To reduce the model's context window"],c:1,e:"Good chunking produces retrieval-friendly units — small enough to be relevant, large enough to be self-contained. Poor chunking dilutes or fragments retrieved context."},
+{dom:'d6',q:"How does RAG help reduce hallucination?",opts:["It makes the model hallucinate more","It grounds the answer in retrieved context so Claude writes from real data instead of guessing","It disables the context window","It retrains a new model each query"],c:1,e:"By placing relevant retrieved text in the prompt, RAG grounds responses in actual data, reducing confident fabrication. Retrieval quality still limits the ceiling."},
+{dom:'d6',q:"Which ground rule should you add to a RAG-based prompt?",opts:["Invent details if uncertain","Tell Claude to state when the answer is not present in the provided context rather than guessing","Always ignore the retrieved text","Repeat only the question"],c:1,e:"Instruct the model to answer from the provided context and to say clearly when information isn't there — an honesty rule that prevents hallucination in grounded systems."},
+{dom:'d6',q:"Does implementing RAG require retraining the base model?",opts:["Yes, full retraining every update","No — it retrieves and injects text into the prompt at query time","Only if using embeddings","Only in Vertex AI"],c:1,e:"RAG does not retrain the model. It augments each request with retrieved context, so knowledge can be updated by refreshing the index rather than retraining."},
+
+// ===== DOMAIN 7: Safety, Guardrails & Deployment =====
+{dom:'d7',q:"What is Anthropic's 'Constitutional AI'?",opts:["A legal department for AI companies","An alignment method that trains models to be helpful, harmless and honest using a written set of principles","A government certification","A fine-tuning license"],c:1,e:"Constitutional AI aligns models via a written 'constitution' of principles and feedback, aiming for helpful, harmless, honest behavior instead of relying only on human labelers to catch harm."},
+{dom:'d7',q:"To reduce prompt-injection risk from untrusted user content, the best approach is to:",opts:["Embed user content directly into the system prompt","Treat user content as data (isolated from instructions), use delimiters, and keep instructions in the system layer","Disable the model's ability to read","Block all user input"],c:1,e:"Defense-in-depth: keep untrusted content out of the system prompt, delimit data from instructions, and limit the reach/power of tools the model can invoke."},
+{dom:'d7',q:"A key app-level guardrail for a production system is to:",opts:["Give the model admin credentials","Validate and constrain tool actions before they can affect the real world","Remove all moderation","Never log anything"],c:1,e:"Architects add guardrails on top of the model: validate actions, apply moderation/content filters, enforce least privilege and monitor. The model's alignment is the base; the app is the enforcement boundary."},
+{dom:'d7',q:"Besides the Anthropic API, where can organizations deploy the same Claude models?",opts:["Only on privately owned GPUs","AWS Bedrock and Google Vertex AI","Only on claude.ai","Only via open-source forks"],c:1,e:"Claude runs on the Anthropic API and on managed clouds — AWS Bedrock and Google Vertex AI — chosen for cloud preference, data residency and procurement needs."},
+{dom:'d7',q:"Which levers reduce cost and/or latency for a Claude application?",opts:["Choosing a cheaper/faster tier, controlling prompt token counts, and using caching / batch","Only switching cloud providers","Increasing temperature","Adding more tools on every call"],c:1,e:"Cost and latency are driven by model tier, token count per request, caching and batch/streaming. Tier choice and prompt size are the biggest practical levers."},
+{dom:'d7',q:"Who is responsible for safety in a deployed Claude application?",opts:["Only Anthropic","Anthropic's model alignment plus the architect's guardrails, input handling and monitoring","Only the end user","No one"],c:1,e:"Safety is shared: Anthropic aligns the model (Constitutional AI), and the architect owns inputs, guardrails, tool permissions, moderation and monitoring inside their application."},
+];
+
+let scope='all', mode='learn', timerMin=30, curSel=null;
+let cur=[], idx=0, answers={}, score=0, timerID=null, timeLeft=0;
+
+function pick(set){
+  const d=document.getElementById('sel-domains').value;
+  let base=set.filter(function(q){ return d==='all' || q.dom===d; });
+  if(scope==='random') base=shuffle(base).slice(0,Math.min(20,base.length));
+  return base;
+}
+function shuffle(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];} return r; }
+const DOMNAMES={d1:'Models & Capabilities',d2:'LLM Core Concepts',d3:'Prompt Engineering',d4:'Developer Platform',d5:'Tools, MCP & Agents',d6:'RAG & Context Engineering',d7:'Safety & Deployment'};
+
+function $(id){return document.getElementById(id);}
+function setScope(v,el){ scope=v; ['opt-all','opt-random'].forEach(function(i){$(i).classList.remove('sel')}); if(el)el.classList.add('sel'); }
+function setMode(v,el){ mode=v; ['opt-learn','opt-exam'].forEach(function(i){$(i).classList.remove('sel')}); if(el)el.classList.add('sel'); }
+
+function start(){
+  cur=pick(all);
+  if(!cur.length){ show('screen-empty'); clearTimer(); return; }
+  answers={}; score=0; idx=0;
+  timerMin=parseInt($('sel-timer').value||'0',10);
+  timeLeft=timerMin*60;
+  show('screen-quiz');
+  clearTimer();
+  if(timerMin>0){ timerID=setInterval(tick,1000); $('timer-el').textContent=fmt(timeLeft); }
+  else $('timer-el').textContent='';
+  render();
+}
+function tick(){
+  timeLeft--; $('timer-el').textContent=fmt(timeLeft);
+  if(timeLeft<=0){ clearTimer(); finish(); }
+}
+function fmt(s){ const m=Math.floor(s/60),r=s%60; return m+':'+(r<10?'0':'')+r; }
+function clearTimer(){ if(timerID){clearInterval(timerID);timerID=null;} }
+
+function show(id){ ['screen-setup','screen-quiz','screen-result','screen-empty'].forEach(function(s){$(s).style.display=(s===id)?'block':'none';}); window.scrollTo(0,0); }
+
+function answered(i){ return answers[i]!==undefined; }
+
+function render(){
+  const q=cur[idx], n=cur.length;
+  $('qchip').textContent=DOMNAMES[q.dom];
+  $('qtext').textContent=(idx+1)+'. '+q.q;
+  $('ctr').textContent=(idx+1)+' of '+n;
+  $('pfill').style.width=((idx+1)/n*100)+'%';
+  $('pmeta-left').textContent='Question '+ (idx+1) +' / '+n;
+  const sofar=Object.keys(answers).filter(function(k){return answers[k].correct;}).length;
+  $('score-sofar').textContent='So far: '+sofar+' correct';
+  $('prev-btn').disabled=(idx===0);
+  $('next-btn').textContent=(idx===n-1)?'Finish & Review':'Next →';
+  // options
+  const box=$('opts'); box.innerHTML='';
+  q.opts.forEach(function(o,i){
+    const b=document.createElement('button'); b.className='optbtn';
+    b.innerHTML='<span class="letter">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span>';
+    const a=answers[idx];
+    const reveal=(mode==='learn')&&(a!==undefined);
+    if(mode==='learn'&&a!==undefined){
+      if(i===q.c)b.classList.add('correct');
+      else if(i===a.chosen)b.classList.add('wrong');
+      else b.classList.add('dim');
+      b.disabled=true;
+    } else if(a!==undefined&&mode==='exam'){
+      if(i===a.chosen)b.classList.add('sel');
+    }
+    b.onclick=function(){ choose(i,b); };
+    box.appendChild(b);
+  });
+  const ex=$('explain');
+  ex.className='explain'; ex.classList.remove('wrongcase','show');
+  if(mode==='learn'&&answered(idx)){
+    const a=answers[idx];
+    ex.classList.add('show');
+    if(!a.correct)ex.classList.add('wrongcase');
+    ex.innerHTML='<div class="ehead">'+(a.correct?'✔ Correct — '+String.fromCharCode(65+q.c)+'. '+q.opts[q.c]:'✘ Incorrect — correct is '+String.fromCharCode(65+q.c)+'. '+q.opts[q.c])+'</div><p>'+q.e+'</p>';
+  }
+}
+
+function choose(i,btn){
+  if(mode==='exam'&&answered(idx)){ answers[idx].chosen=i; render(); return; }
+  const q=cur[idx];
+  const correct=(i===q.c);
+  answers[idx]={chosen:i,correct:correct};
+  if(correct)score++;
+  if(mode==='learn'){ loadQAt(idx); }
+}
+
+function loadQAt(i){ idx=i; render(); }
+function next(){ if(idx<cur.length-1){idx++;render();} else finish(); }
+function prev(){ if(idx>0){idx--;render();} }
+
+function finish(){
+  clearTimer();
+  const n=cur.length, pass=Math.round(n*0.8);
+  const pct=Math.round(score/n*100);
+  const big=$('bigscore'); big.textContent=score+' / '+n;
+  big.className='bigscore '+(score>=pass?'pass':'fail');
+  const badge=$('badge'); badge.className='badge '+(score>=pass?'pass':'fail');
+  badge.textContent=(score>=pass)?'PASS ('+pct+'%) — exam-ready!':'Review needed ('+pct+'%)';
+  $('score-detail').textContent='You answered '+n+' questions in '+fmt(Math.max(0,timeLeft>0?timerMin*60-timeLeft:0))+' → '+pct+'% overall. For the real exam, aim to exceed the pass line comfortably.';
+  // domain scores
+  const domBox=$('domain-scores'); domBox.innerHTML='<h3>Score by domain</h3>';
+  const by={};
+  cur.forEach(function(q,i){ (by[q.dom]=by[q.dom]||[]).push(i); });
+  Object.keys(by).forEach(function(d){
+    const items=by[d]; const right=items.filter(function(i){return answers[i]&&answers[i].correct;}).length;
+    const p=Math.round(right/items.length*100);
+    domBox.innerHTML+='<div class="drow"><span class="dname">'+DOMNAMES[d]+'</span>'+
+      '<div class="dbar"><span style="width:'+p+'%"></span></div><span class="dval">'+right+'/'+items.length+'</span></div>';
+  });
+  // review list (wrong first)
+  const rev=$('review'); rev.innerHTML='<h3>Review all answers (with explanations)</h3>';
+  cur.forEach(function(q,i){
+    const a=answers[i]; const chosen=(a?a.chosen:-1);
+    const status= (chosen<0)?'<div class="yours">— not answered</div>' :
+      (a.correct?'<div class="right">✔ Your answer: '+String.fromCharCode(65+chosen)+'. '+q.opts[chosen]+'</div>'
+                :'<div class="yours">✘ Your answer: '+String.fromCharCode(65+chosen)+'. '+q.opts[chosen]+'</div>');
+    rev.innerHTML+='<div class="revitem"><div class="q">'+ (i+1)+'. ['+DOMNAMES[q.dom]+'] '+q.q+'</div>'+status+
+      '<div class="right">Correct: '+String.fromCharCode(65+q.c)+'. '+q.opts[q.c]+'</div>'+
+      '<div class="why">'+q.e+'</div></div>';
+  });
+  show('screen-result');
+}
+function restart(){ show('screen-setup'); clearTimer(); $('timer-el').textContent=''; }
+
+$('next-btn').onclick=next;
+$('prev-btn').onclick=prev;
+/* boot: data & defaults are ready; user configures from the setup screen. */
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCA-F Study Hub — Claude Certified Architect (Foundations)</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --card:#17171a; --card2:#1e1e23; --border:#2b2b33;
+    --text:#ece9e4; --muted:#a0a0ab; --accent:#d97757; --accent2:#e8b27c;
+    --ok:#7bc5a0; --warn:#e0b36a; --bad:#e07a7a;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0; padding:0; background:var(--bg); color:var(--text); line-height:1.6;
+  }
+  .container{max-width:1080px; margin:0 auto; padding:20px}
+  header{
+    background:linear-gradient(135deg,#1a1210,#17171a 55%);
+    border-bottom:1px solid var(--border); padding:40px 20px; text-align:center;
+  }
+  header h1{margin:0; font-size:2.3rem; letter-spacing:-.5px}
+  header h1 .cl{color:var(--accent)}
+  header p{color:var(--muted); margin:12px 0 0; max-width:720px; display:inline-block}
+  .pillrow{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:22px}
+  .pill{background:rgba(217,119,87,.12); border:1px solid rgba(217,119,87,.35); color:var(--accent);
+    padding:6px 14px; border-radius:999px; font-size:.85rem; font-weight:600}
+  .pill.alt{background:rgba(123,197,160,.1); border-color:rgba(123,197,160,.3); color:var(--ok)}
+  section{background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:24px; margin:24px 0}
+  h2{margin:0 0 4px; font-size:1.45rem; color:var(--accent)}
+  section>p.sub{color:var(--muted); margin:0 0 18px; font-size:.95rem}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px}
+  .card{background:var(--card2); border:1px solid var(--border); border-radius:10px;
+    padding:18px; text-align:left; text-decoration:none; color:var(--text);
+    transition:transform .15s ease, border-color .15s ease}
+  .card:hover{transform:translateY(-3px); border-color:var(--accent)}
+  .card .tag{display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.5px;
+    text-transform:uppercase; color:var(--accent); margin-bottom:8px}
+  .card .tag.r{color:var(--ok)} .card .tag.s{color:var(--accent2)} .card .tag.p{color:var(--bad)}
+  .card h3{margin:0 0 6px; font-size:1.05rem}
+  .card p{margin:0; color:var(--muted); font-size:.85rem; line-height:1.5}
+  .plan{width:100%; border-collapse:collapse; font-size:.95rem}
+  .plan th,.plan td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top}
+  .plan th{color:var(--accent2); font-size:.8rem; text-transform:uppercase; letter-spacing:.5px}
+  .plan td.day{font-weight:700; white-space:nowrap; color:var(--accent)}
+  .goal{color:var(--muted); font-size:.85rem}
+  .facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+  .fact{background:var(--card2); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:8px; padding:14px}
+  .fact b{display:block; color:var(--accent2); font-size:.8rem; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px}
+  .fact span{color:var(--muted); font-size:.9rem}
+  .tips li{margin:8px 0; color:var(--muted)}
+  .foot{text-align:center; color:var(--muted); font-size:.8rem; padding:24px 0}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Claude Certified Architect <span class="cl">· Foundations</span></h1>
+  <h1 style="font-size:1.1rem; color:var(--muted); font-weight:500; margin:6px 0 0">(CCA-F) — 7-Day Study Hub</h1>
+  <p>Read the study guide, use the Feynman "teach-it-back" lenses, then drill the practice exam with full answer explanations. Build once, revisit daily.</p>
+  <div class="pillrow">
+    <span class="pill">7-day sprint</span><span class="pill">~1–1.5 h/day</span>
+    <span class="pill alt">Offline · no dependencies</span><span class="pill">Open in browser</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <section>
+    <h2>🚀 The 3 Layer Method (Read → Study → Practice)</h2>
+    <p class="sub">Cornell notes for structure, Feynman for true understanding, timed practice for exam-readiness.</p>
+    <div class="grid">
+      <a class="card" href="study-guide.html">
+        <span class="tag r">READ &amp; STUDY</span>
+        <h3>📘 Study Guide</h3>
+        <p>Full Cornell + Feynman notes for every domain: cue column, notes, summary, analogies, quick-checks.</p>
+      </a>
+      <a class="card" href="practice-exam.html">
+        <span class="tag p">PRACTICAL EXAM</span>
+        <h3>📝 Practice Exam</h3>
+        <p>~50 realistic MCQ questions. Every answer explained; scored by domain; timed mode. Target <b>80%</b>.</p>
+      </a>
+      <a class="card" href="#plan">
+        <span class="tag s">PLAN</span>
+        <h3>🗓 7-Day Plan</h3>
+        <p>Which topics to cover each day and which flashcard lens to apply. Daily bullet-time.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>🎯 Exam Quick-Facts</h2>
+    <p class="sub">What to know about CCA-F format and how to pass.</p>
+    <div class="facts">
+      <div class="fact"><b>Purpose</b><span>Foundational architecture/design knowledge of building with Claude on the Anthropic platform.</span></div>
+      <div class="fact"><b>Topic weight</b><span>Core concepts, Claude models, prompt engineering, the API &amp; Developer Platform, tool use / MCP / Agents, RAG &amp; context engineering, Safety &amp; deployments.</span></div>
+      <div class="fact"><b>Pass mark</b><span>You should aim for <b style="color:var(--ok)">80%+</b> on practice — a solid buffer above the pass line.</span></div>
+      <div class="fact"><b>Why it matters</b><span>Foundations is the prerequisite before the advanced Architect credential. Score here = architecture judgement + API fluency.</span></div>
+    </div>
+  </section>
+</div>
+<div class="container">
+
+  <section id="plan">
+    <h2>🗓 7-Day Sprint Plan</h2>
+    <p class="sub">Cornell-note a topic in the morning, Feynman it over the day (explain it out loud / to a rubber duck), then do the daily drill bank.</p>
+    <div style="overflow-x:auto">
+    <table class="plan">
+      <tr><th>Day</th><th>Focus</th><th>What to master</th><th>Self-check</th></tr>
+      <tr><td class="day">1</td><td><b>Claude Models &amp; Capabilities</b></td>
+        <td>Model family (Opus/Sonnet/Haiku), context window, tokens, latest-model naming, capabilities (writing, coding, vision, long-context).</td>
+        <td class="goal">Name the model tiers &amp; their trade-offs on quality vs. speed/cost.</td></tr>
+      <tr><td class="day">2</td><td><b>LLM Core Concepts</b></td>
+        <td>Sampling params (temperature, top-p), tokens &amp; rate limits, context window limits, structured vs. free text, token counting.</td>
+        <td class="goal">Explain temperature/top-p and tokens to a friend without notes.</td></tr>
+      <tr><td class="day">3</td><td><b>Prompt Engineering</b></td>
+        <td>Clear instructions, system vs. user roles, few-shot, chain-of-thought + role prompts, XML tags, output formats (JSON).</td>
+        <td class="goal">Write a single prompt that returns valid structured JSON.</td></tr>
+      <tr><td class="day">4</td><td><b>Claude Developer Platform</b></td>
+        <td>Console, API keys, the Messages API, SDKs (Python/TS), authentication &amp; model params, streaming, async, error handling.</td>
+        <td class="goal">Trace an API call end-to-end: key → endpoint → response.</td></tr>
+      <tr><td class="day">5</td><td><b>Tool Use, MCP, Agents</b></td>
+        <td>Function calling pattern, structured outputs, Model Context Protocol (MCP) servers/clients, Agent SDK / Claude Code, when to use tools.</td>
+        <td class="goal">Explain the "tool loop" (ask → invoke → feed back result).</td></tr>
+      <tr><td class="day">6</td><td><b>RAG &amp; Context Engineering</b></td>
+        <td>Retrieval-Augmented Generation, embeddings &amp; vector search, chunking, grounding answers in documents, avoiding hallucination.</td>
+        <td class="goal">Draw the RAG pipeline on paper in under 2 minutes.</td></tr>
+      <tr><td class="day">7</td><td><b>Safety, Guardrails &amp; Deployment</b></td>
+        <td>Constitutional AI, misuse/harm categories, system-prompt guardrails, deployments (Anthropic API, Bedrock, Vertex), batch &amp; cost control.</td>
+        <td class="goal">Full practice exam → then review wrong answers' explanations.</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>🧠 Study Daily Loop (Cornell + Feynman)</h2>
+    <p class="sub">Use the Cornell note template then the Feynman loop below. They reinforce each other.</p>
+    <div class="grid">
+      <div class="card" style="cursor:default">
+        <span class="tag">CORNELL</span>
+        <h3>Left = Cues · Right = Notes · Bottom = Summary</h3>
+        <p>While reading the guide, jot key terms/questions on the left; your answers/details on the right; then a 2–3 sentence summary. Turns passive reading into active recall.</p>
+      </div>
+      <div class="card" style="cursor:default">
+        <span class="tag">FEYNMAN</span>
+        <h3>1 Teach · 2 Find gaps · 3 Recap · 4 Simplify</h3>
+        <p>Explain the topic in plain words (out loud or to someone). Wherever you stumble, that's a gap → go back to the guide. Repeat until you can teach it simply.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>✅ Pass Strategy &amp; Daily Tips</h2>
+    <ul class="tips">
+      <li><b>Day 1–2</b> build the mental model (why Claude behaves the way it does).</li>
+      <li><b>Day 3–6</b> one strong topic per day + its quiz drill — don't binge questions without notes.</li>
+      <li><b>Active recall &gt; re-reading:</b> cover the notes column and answer the cues; only peek to verify.</li>
+      <li><b>Spaced repetition:</b> each morning quickly re-cue the previous days' summaries before new content.</li>
+      <li><b>Day 7:</b> run the full practice exam timed, then re-read every explanation — even for correct answers.</li>
+      <li>Aim <b>80% and above</b> twice in a row before exam day for confidence.</li>
+    </ul>
+  </section>
+
+  <div class="foot">CCA-F Study Hub · Created from public Claude/Anthropic documentation &amp; platform knowledge. Always verify against the official Anthropic exam guide before sitting.</div>
+</div>
+</body>
+</html>
